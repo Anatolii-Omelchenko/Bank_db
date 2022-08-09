@@ -8,8 +8,9 @@ import java.util.Objects;
 public class MyTransaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Double sum;
+    private Float sum;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
@@ -17,12 +18,15 @@ public class MyTransaction {
 
     @ManyToOne
     @JoinColumn(name = "to_account")
-    private Account to_account;
+    private Account toAccount;
 
-    public MyTransaction(Double sum, Account account, Account to_account) {
+    private String type;
+
+    public MyTransaction(Float sum, Account account, Account to_account, String type) {
         this.sum = sum;
         this.account = account;
-        this.to_account = to_account;
+        this.toAccount = to_account;
+        this.type = type;
     }
 
     public MyTransaction() {
@@ -40,23 +44,23 @@ public class MyTransaction {
         this.account = account;
     }
 
-    public Account getTo_account() {
-        return to_account;
+    public Account getToAccount() {
+        return toAccount;
     }
 
-    public void setTo_account(Account to_account) {
-        this.to_account = to_account;
+    public void setToAccount(Account to_account) {
+        this.toAccount = to_account;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public Double getSum() {
+    public Float getSum() {
         return sum;
     }
 
-    public void setSum(Double sum) {
+    public void setSum(Float sum) {
         this.sum = sum;
     }
 
@@ -66,21 +70,32 @@ public class MyTransaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MyTransaction that = (MyTransaction) o;
-        return id == that.id && Objects.equals(sum, that.sum) && Objects.equals(account, that.account) && Objects.equals(to_account, that.to_account);
+        return id == that.id && Objects.equals(sum, that.sum) && Objects.equals(account, that.account) && Objects.equals(toAccount, that.toAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sum, account, to_account);
+        return Objects.hash(id, sum, account, toAccount);
     }
 
     @Override
     public String toString() {
+
+        String fromNumber = "ATM";
+        String toNumber = "ATM";
+
+        if (account != null) {
+            fromNumber = String.valueOf(account.getNumber());
+        }
+        if (toAccount != null) {
+            toNumber = String.valueOf(toAccount.getNumber());
+        }
+
         return "MyTransaction{" +
                 "id=" + id +
                 ", sum=" + sum +
-                ", account=" + account +
-                ", to_account=" + to_account +
+                ", from: " + fromNumber +
+                ", to: " + toNumber + " | type: " + type +
                 '}';
     }
 }

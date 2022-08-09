@@ -13,10 +13,11 @@ public class BankDbMain {
 
                 System.out.println("1: view all clients");
                 System.out.println("2: view all accounts");
-                System.out.println("4: view all orders\n");
+                System.out.println("3: view all transactions\n");
 
-                System.out.println("5: add client");
-                System.out.println("6: add product");
+                System.out.println("4: make deposit");
+                System.out.println("5: make transfer");
+                System.out.println("6: make withdrawal");
 
                 System.out.print("-> ");
 
@@ -27,11 +28,13 @@ public class BankDbMain {
                 } else if (choose.equals("2")) {
                     DataBaseManager.viewAllAcc();
                 } else if (choose.equals("3")) {
-                    DataBaseManager.deposit(663422784, "USD", 233);
+                    DataBaseManager.viewAllTransactions();
                 } else if (choose.equals("4")) {
+                    DataBaseManager.deposit(663422784, "USD", 233);
                 } else if (choose.equals("5")) {
+                    DataBaseManager.transferMoney(663422784,123422233,400);
                 } else if (choose.equals("6")) {
-
+                    DataBaseManager.withdrawal(663422784, 100, "USD");
                 } else {
                     return;
                 }

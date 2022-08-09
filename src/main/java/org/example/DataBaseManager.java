@@ -30,7 +30,7 @@ public class DataBaseManager {
 
     private static void setCourse(float euro, float dollar) {
         ExchangeRate exchangeRate = new ExchangeRate(euro, dollar);
-        performTransaction(()->{
+        performTransaction(() -> {
             em.merge(exchangeRate);
             return null;
         });
@@ -43,9 +43,65 @@ public class DataBaseManager {
         String toCurrency = account.getCurrency();
 
         float money = convertMoney(fromCurrency, toCurrency, sum);
+        MyTransaction transaction = new MyTransaction(sum, null, account, "deposit");
+        account.addTransaction(transaction);
+
         performTransaction(() -> {
             account.setMoney(account.getMoney() + money);
             em.merge(account);
+            return null;
+        });
+    }
+
+    public static void withdrawal(int fromNumber, float sum, String toCurrency) {
+        TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x WHERE x.number=:number", Account.class);
+
+        query.setParameter("number", fromNumber);
+        Account fromAccount = query.getSingleResult();
+        String fromCurrency = fromAccount.getCurrency();
+
+        float money = convertMoney(fromCurrency, toCurrency, sum);
+
+        if (fromAccount.getMoney() < money) {
+            System.out.println("\n\tYou dont have enough money!\n");
+            return;
+        }
+        MyTransaction transaction = new MyTransaction(sum, fromAccount, null, "withdrawal");
+        fromAccount.addTransaction(transaction);
+
+        performTransaction(() -> {
+            fromAccount.setMoney(fromAccount.getMoney() - money);
+            em.merge(fromAccount);
+            return null;
+        });
+    }
+
+
+    public static void transferMoney(int fromNumber, int toNumber, float sum) {
+        TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x WHERE x.number=:number", Account.class);
+
+        query.setParameter("number", toNumber);
+        Account toAccount = query.getSingleResult();
+        String toCurrency = toAccount.getCurrency();
+
+        query.setParameter("number", fromNumber);
+        Account fromAccount = query.getSingleResult();
+        String fromCurrency = fromAccount.getCurrency();
+
+        if (fromAccount.getMoney() < sum) {
+            System.out.println("\n\tYou dont have enough money!\n");
+            return;
+        }
+
+        float money = convertMoney(fromCurrency, toCurrency, sum);
+        MyTransaction transaction = new MyTransaction(sum, fromAccount, toAccount, "transfer");
+        toAccount.addTransaction(transaction);
+
+        performTransaction(() -> {
+            fromAccount.setMoney(fromAccount.getMoney() - sum);
+            toAccount.setMoney(toAccount.getMoney() + money);
+            em.merge(fromAccount);
+            em.merge(toAccount);
             return null;
         });
     }
@@ -118,6 +174,13 @@ public class DataBaseManager {
         }
     }
 
+    public static void viewAllTransactions() {
+        TypedQuery<MyTransaction> query = em.createQuery("SELECT x FROM MyTransaction x", MyTransaction.class);
+        List<MyTransaction> clientList = query.getResultList();
+        for (MyTransaction cl : clientList) {
+            System.out.println(cl);
+        }
+    }
 
     private static <T> T performTransaction(Callable<T> action) {
         EntityTransaction transaction = em.getTransaction();

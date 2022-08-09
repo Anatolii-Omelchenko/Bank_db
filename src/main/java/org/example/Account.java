@@ -1,9 +1,7 @@
 package org.example;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Account {
@@ -24,7 +22,7 @@ public class Account {
     private Client client;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<MyTransaction> transactions = new HashSet<>();
+    private List<MyTransaction> transactions = new ArrayList<>();
 
     public Account() {
     }
@@ -33,6 +31,10 @@ public class Account {
         this.currency = currency;
         this.number = number;
         this.client = client;
+    }
+
+    public void addTransaction(MyTransaction transaction){
+        transactions.add(transaction);
     }
 
     public int getId() {
