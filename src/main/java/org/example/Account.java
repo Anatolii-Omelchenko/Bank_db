@@ -9,6 +9,7 @@ import java.util.Set;
 public class Account {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String currency;
@@ -28,9 +29,10 @@ public class Account {
     public Account() {
     }
 
-    public Account(String currency, int number) {
+    public Account(String currency, int number, Client client) {
         this.currency = currency;
         this.number = number;
+        this.client = client;
     }
 
     public int getId() {
@@ -92,8 +94,6 @@ public class Account {
                 "id=" + id +
                 ", currency='" + currency + '\'' +
                 ", number=" + number +
-                ", money=" + money +
-                ", client=" + client +
-                '}';
+                ", money=" + money + " client: " + client.getName();
     }
 }

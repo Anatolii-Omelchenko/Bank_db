@@ -19,6 +19,12 @@ public class MyTransaction {
     @JoinColumn(name = "to_account")
     private Account to_account;
 
+    public MyTransaction(Double sum, Account account, Account to_account) {
+        this.sum = sum;
+        this.account = account;
+        this.to_account = to_account;
+    }
+
     public MyTransaction() {
     }
 

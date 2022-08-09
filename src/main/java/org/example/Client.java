@@ -1,9 +1,7 @@
 package org.example;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "my_clients")
@@ -16,13 +14,17 @@ public class Client {
     private String name;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private Set<Account> accounts = new HashSet<>();
+    private List<Account> accounts = new ArrayList<>();
 
     public Client() {
     }
 
     public Client(String name) {
         this.name = name;
+    }
+
+    public void addAccount(Account account){
+        accounts.add(account);
     }
 
     public int getId() {
@@ -41,13 +43,6 @@ public class Client {
         this.name = name;
     }
 
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -9,10 +9,10 @@ public class ExchangeRate {
 
     @Id
     private int id;
-    private String euroRate;
-    private String dollarRate;
+    private Float euroRate;
+    private Float dollarRate;
 
-    public ExchangeRate(String euroRate, String dollarRate) {
+    public ExchangeRate(Float euroRate, Float dollarRate) {
         this.euroRate = euroRate;
         this.dollarRate = dollarRate;
     }
@@ -28,19 +28,19 @@ public class ExchangeRate {
         this.id = id;
     }
 
-    public String getEuroRate() {
+    public Float getEuroRate() {
         return euroRate;
     }
 
-    public void setEuroRate(String euroRate) {
+    public void setEuroRate(Float euroRate) {
         this.euroRate = euroRate;
     }
 
-    public String getDollarRate() {
+    public Float getDollarRate() {
         return dollarRate;
     }
 
-    public void setDollarRate(String dollarRate) {
+    public void setDollarRate(Float dollarRate) {
         this.dollarRate = dollarRate;
     }
 
