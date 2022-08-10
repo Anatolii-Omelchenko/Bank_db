@@ -2,6 +2,9 @@ package org.example;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -20,11 +23,9 @@ public class MyTransaction {
     @ManyToOne
     @JoinColumn(name = "to_account")
     private Account toAccount;
-
     private String type;
-
     private String currency;
-
+    private LocalDateTime dateTime = LocalDateTime.now();
     public MyTransaction(Float sum, Account account, Account to_account, String type, String currency) {
         this.sum = sum;
         this.account = account;
@@ -88,6 +89,7 @@ public class MyTransaction {
         String fromNumber = "ATM";
         String toNumber = "ATM";
         DecimalFormat decimal = new DecimalFormat("#.##");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
         if (account != null) {
             fromNumber = String.valueOf(account.getNumber());
@@ -98,6 +100,6 @@ public class MyTransaction {
 
         return "| transaction #" + id + " | sum: " + decimal.format(sum) +
                 " " + currency + " | from: " + fromNumber +
-                " | to: " + toNumber + " | type: " + type + " |";
+                " | to: " + toNumber + " | type: " + type + " | data: " + dateTime.format(formatter) + " |";
     }
 }
