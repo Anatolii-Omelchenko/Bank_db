@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Entity
@@ -15,7 +16,7 @@ public class Account {
     @Column(unique = true)
     private int number;
 
-    private double money;
+    private double balance;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -69,12 +70,12 @@ public class Account {
         this.number = number;
     }
 
-    public double getMoney() {
-        return money;
+    public double getBalance() {
+        return balance;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
+    public void setBalance(double money) {
+        this.balance = money;
     }
 
     @Override
@@ -82,20 +83,21 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return id == account.id && number == account.number && Double.compare(account.money, money) == 0 && Objects.equals(currency, account.currency) && Objects.equals(client, account.client);
+        return id == account.id && number == account.number && Double.compare(account.balance, balance) == 0 && Objects.equals(currency, account.currency) && Objects.equals(client, account.client);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, currency, number, money, client);
+        return Objects.hash(id, currency, number, balance, client);
     }
 
     @Override
     public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", currency='" + currency + '\'' +
-                ", number=" + number +
-                ", money=" + money + " client: " + client.getName();
+
+        DecimalFormat decimal = new DecimalFormat("#.##");
+
+        return "| account #" + id + " | owner " + client.getName() +
+                " | number: " + number + " | balance: " + decimal.format(balance) +
+                " | currency: " + currency + " |";
     }
 }

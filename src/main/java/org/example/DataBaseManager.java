@@ -39,15 +39,15 @@ public class DataBaseManager {
     public static void getSumOfClientMoney(int clientID) {
         TypedQuery<Account> euroQuery = em.createQuery(
                 "SELECT x FROM Account x where x.client.id =: clientID AND x.currency =: currency", Account.class);
-        euroQuery.setParameter("clientID",clientID);
-        euroQuery.setParameter("currency","EUR");
+        euroQuery.setParameter("clientID", clientID);
+        euroQuery.setParameter("currency", "EUR");
 
         List<Account> euroAccounts = euroQuery.getResultList();
 
-        euroQuery.setParameter("currency","USD");
+        euroQuery.setParameter("currency", "USD");
         List<Account> usdAccounts = euroQuery.getResultList();
 
-        euroQuery.setParameter("currency","UAH");
+        euroQuery.setParameter("currency", "UAH");
         List<Account> uahAccounts = euroQuery.getResultList();
 
         TypedQuery<ExchangeRate> query = em.createQuery("SELECT x FROM ExchangeRate x", ExchangeRate.class);
@@ -58,17 +58,17 @@ public class DataBaseManager {
         double usd = 0;
         double uah = 0;
 
-        for(Account acc : euroAccounts){
-            euro += acc.getMoney();
+        for (Account acc : euroAccounts) {
+            euro += acc.getBalance();
         }
-        for(Account acc : usdAccounts){
-            usd += acc.getMoney();
+        for (Account acc : usdAccounts) {
+            usd += acc.getBalance();
         }
-        for(Account acc : uahAccounts){
-            uah += acc.getMoney();
+        for (Account acc : uahAccounts) {
+            uah += acc.getBalance();
         }
 
-        double total = euroCourse*euro + dollarCourse*usd + uah;
+        double total = euroCourse * euro + dollarCourse * usd + uah;
         System.out.println("\nEURO: " + euro);
         System.out.println("USD: " + usd);
         System.out.println("UAH: " + uah);
@@ -83,11 +83,11 @@ public class DataBaseManager {
         String toCurrency = account.getCurrency();
 
         float money = convertMoney(fromCurrency, toCurrency, sum);
-        MyTransaction transaction = new MyTransaction(sum, null, account, "deposit");
+        MyTransaction transaction = new MyTransaction(sum, null, account, "deposit", fromCurrency);
         account.addTransaction(transaction);
 
         performTransaction(() -> {
-            account.setMoney(account.getMoney() + money);
+            account.setBalance(account.getBalance() + money);
             em.merge(account);
             return null;
         });
@@ -102,15 +102,15 @@ public class DataBaseManager {
 
         float money = convertMoney(fromCurrency, toCurrency, sum);
 
-        if (fromAccount.getMoney() < money) {
+        if (fromAccount.getBalance() < money) {
             System.out.println("\n\tYou dont have enough money!\n");
             return;
         }
-        MyTransaction transaction = new MyTransaction(sum, fromAccount, null, "withdrawal");
+        MyTransaction transaction = new MyTransaction(sum, fromAccount, null, "withdrawal", toCurrency);
         fromAccount.addTransaction(transaction);
 
         performTransaction(() -> {
-            fromAccount.setMoney(fromAccount.getMoney() - money);
+            fromAccount.setBalance(fromAccount.getBalance() - money);
             em.merge(fromAccount);
             return null;
         });
@@ -128,18 +128,18 @@ public class DataBaseManager {
         Account fromAccount = query.getSingleResult();
         String fromCurrency = fromAccount.getCurrency();
 
-        if (fromAccount.getMoney() < sum) {
+        if (fromAccount.getBalance() < sum) {
             System.out.println("\n\tYou dont have enough money!\n");
             return;
         }
 
         float money = convertMoney(fromCurrency, toCurrency, sum);
-        MyTransaction transaction = new MyTransaction(sum, fromAccount, toAccount, "transfer");
+        MyTransaction transaction = new MyTransaction(sum, fromAccount, toAccount, "transfer", fromCurrency);
         toAccount.addTransaction(transaction);
 
         performTransaction(() -> {
-            fromAccount.setMoney(fromAccount.getMoney() - sum);
-            toAccount.setMoney(toAccount.getMoney() + money);
+            fromAccount.setBalance(fromAccount.getBalance() - sum);
+            toAccount.setBalance(toAccount.getBalance() + money);
             em.merge(fromAccount);
             em.merge(toAccount);
             return null;

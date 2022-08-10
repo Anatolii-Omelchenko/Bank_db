@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Entity
@@ -22,11 +23,14 @@ public class MyTransaction {
 
     private String type;
 
-    public MyTransaction(Float sum, Account account, Account to_account, String type) {
+    private String currency;
+
+    public MyTransaction(Float sum, Account account, Account to_account, String type, String currency) {
         this.sum = sum;
         this.account = account;
         this.toAccount = to_account;
         this.type = type;
+        this.currency = currency;
     }
 
     public MyTransaction() {
@@ -83,6 +87,7 @@ public class MyTransaction {
 
         String fromNumber = "ATM";
         String toNumber = "ATM";
+        DecimalFormat decimal = new DecimalFormat("#.##");
 
         if (account != null) {
             fromNumber = String.valueOf(account.getNumber());
@@ -91,11 +96,8 @@ public class MyTransaction {
             toNumber = String.valueOf(toAccount.getNumber());
         }
 
-        return "MyTransaction{" +
-                "id=" + id +
-                ", sum=" + sum +
-                ", from: " + fromNumber +
-                ", to: " + toNumber + " | type: " + type +
-                '}';
+        return "| transaction #" + id + " | sum: " + decimal.format(sum) +
+                " " + currency + " | from: " + fromNumber +
+                " | to: " + toNumber + " | type: " + type + " |";
     }
 }

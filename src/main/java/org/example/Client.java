@@ -43,7 +43,6 @@ public class Client {
         this.name = name;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,10 +58,6 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", accounts=" + accounts +
-                '}';
+        return "| client id " + id + " | name: " + name + " |";
     }
 }
