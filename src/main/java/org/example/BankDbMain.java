@@ -18,6 +18,7 @@ public class BankDbMain {
                 System.out.println("4: make deposit");
                 System.out.println("5: make transfer");
                 System.out.println("6: make withdrawal");
+                System.out.println("7: sum of money by client id");
 
                 System.out.print("-> ");
 
@@ -35,6 +36,8 @@ public class BankDbMain {
                     DataBaseManager.transferMoney(663422784,123422233,400);
                 } else if (choose.equals("6")) {
                     DataBaseManager.withdrawal(663422784, 100, "USD");
+                } else if (choose.equals("7")) {
+                    DataBaseManager.getSumOfClientMoney(1);
                 } else {
                     return;
                 }

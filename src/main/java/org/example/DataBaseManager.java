@@ -36,6 +36,46 @@ public class DataBaseManager {
         });
     }
 
+    public static void getSumOfClientMoney(int clientID) {
+        TypedQuery<Account> euroQuery = em.createQuery(
+                "SELECT x FROM Account x where x.client.id =: clientID AND x.currency =: currency", Account.class);
+        euroQuery.setParameter("clientID",clientID);
+        euroQuery.setParameter("currency","EUR");
+
+        List<Account> euroAccounts = euroQuery.getResultList();
+
+        euroQuery.setParameter("currency","USD");
+        List<Account> usdAccounts = euroQuery.getResultList();
+
+        euroQuery.setParameter("currency","UAH");
+        List<Account> uahAccounts = euroQuery.getResultList();
+
+        TypedQuery<ExchangeRate> query = em.createQuery("SELECT x FROM ExchangeRate x", ExchangeRate.class);
+        float euroCourse = query.getSingleResult().getEuroRate();
+        float dollarCourse = query.getSingleResult().getDollarRate();
+
+        double euro = 0;
+        double usd = 0;
+        double uah = 0;
+
+        for(Account acc : euroAccounts){
+            euro += acc.getMoney();
+        }
+        for(Account acc : usdAccounts){
+            usd += acc.getMoney();
+        }
+        for(Account acc : uahAccounts){
+            uah += acc.getMoney();
+        }
+
+        double total = euroCourse*euro + dollarCourse*usd + uah;
+        System.out.println("\nEURO: " + euro);
+        System.out.println("USD: " + usd);
+        System.out.println("UAH: " + uah);
+        System.out.println("-----------------");
+        System.out.println("Total: " + total + " UAH.\n");
+    }
+
     public static void deposit(int number, String fromCurrency, float sum) {
         TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x WHERE x.number=:number", Account.class);
         query.setParameter("number", number);
