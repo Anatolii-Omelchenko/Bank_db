@@ -36,9 +36,8 @@ public class DataBaseManager {
         });
     }
 
-    public static void getSumOfClientMoney(int clientID) {
-        TypedQuery<Account> euroQuery = em.createQuery(
-                "SELECT x FROM Account x where x.client.id =: clientID AND x.currency =: currency", Account.class);
+    public static void showClientReportById(int clientID) {
+        TypedQuery<Account> euroQuery = em.createQuery("SELECT x FROM Account x where x.client.id =: clientID AND x.currency =: currency", Account.class);
         euroQuery.setParameter("clientID", clientID);
         euroQuery.setParameter("currency", "EUR");
 

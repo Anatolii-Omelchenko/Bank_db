@@ -31,13 +31,22 @@ public class BankDbMain {
                 } else if (choose.equals("3")) {
                     DataBaseManager.viewAllTransactions();
                 } else if (choose.equals("4")) {
-                    DataBaseManager.deposit(663422784, "USD", 233);
+                    int numberForDeposit = 663422784;
+                    String depositCurrency = "USD";
+                    float sum = 233;
+                    DataBaseManager.deposit(numberForDeposit, depositCurrency, sum);
                 } else if (choose.equals("5")) {
-                    DataBaseManager.transferMoney(663422784,123422233,400);
+                    int fromNumber = 663422784;
+                    int toNumber = 123422233;
+                    float sum = 400;
+                    DataBaseManager.transferMoney(fromNumber, toNumber, sum);
                 } else if (choose.equals("6")) {
-                    DataBaseManager.withdrawal(663422784, 100, "USD");
+                    int fromNumber = 663422784;
+                    float sum = 100;
+                    String withdrawalCurrency = "USD";
+                    DataBaseManager.withdrawal(fromNumber, sum, withdrawalCurrency);
                 } else if (choose.equals("7")) {
-                    DataBaseManager.getSumOfClientMoney(1);
+                    DataBaseManager.showClientReportById(1);
                 } else {
                     return;
                 }
