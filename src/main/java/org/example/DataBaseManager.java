@@ -115,7 +115,6 @@ public class DataBaseManager {
         });
     }
 
-
     public static void transferMoney(int fromNumber, int toNumber, float sum) {
         TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x WHERE x.number=:number", Account.class);
 
@@ -170,7 +169,7 @@ public class DataBaseManager {
         return money;
     }
 
-    public static void addClient(String name) {
+    private static void addClient(String name) {
         final Client client = new Client(name);
 
         performTransaction(() -> {
@@ -179,7 +178,7 @@ public class DataBaseManager {
         });
     }
 
-    public static void openAccount(String currency, int number, int client_id) {
+    private static void openAccount(String currency, int number, int client_id) {
         Client client = em.getReference(Client.class, client_id);
         Account account = new Account(currency, number, client);
         client.addAccount(account);
@@ -191,33 +190,25 @@ public class DataBaseManager {
 
     public static void viewAllClients() {
         TypedQuery<Client> query = em.createQuery("SELECT x FROM Client x", Client.class);
-        List<Client> clientList = query.getResultList();
-        for (Client cl : clientList) {
-            System.out.println(cl);
+        List<Client> clients = query.getResultList();
+        for (Client client : clients) {
+            System.out.println(client);
         }
     }
 
     public static void viewAllAcc() {
         TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x", Account.class);
-        List<Account> clientList = query.getResultList();
-        for (Account cl : clientList) {
-            System.out.println(cl);
-        }
-    }
-
-    public static void viewAllAccounts() {
-        TypedQuery<Account> query = em.createQuery("SELECT x FROM Account x", Account.class);
-        List<Account> clientList = query.getResultList();
-        for (Account cl : clientList) {
-            System.out.println(cl);
+        List<Account> accounts = query.getResultList();
+        for (Account account : accounts) {
+            System.out.println(account);
         }
     }
 
     public static void viewAllTransactions() {
         TypedQuery<MyTransaction> query = em.createQuery("SELECT x FROM MyTransaction x", MyTransaction.class);
-        List<MyTransaction> clientList = query.getResultList();
-        for (MyTransaction cl : clientList) {
-            System.out.println(cl);
+        List<MyTransaction> transactions = query.getResultList();
+        for (MyTransaction transaction : transactions) {
+            System.out.println(transaction);
         }
     }
 
